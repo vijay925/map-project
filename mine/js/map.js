@@ -49,7 +49,11 @@ function AppViewModel() {
   };
 
   self.createAndShowMarkers = function() {
-    markers.length = 0;
+    for(var i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+
+    markers = [];
 
     var defaultIcon = makeMarkerIcon('0091ff');
     var highlightedIcon = makeMarkerIcon('FFFF24');
