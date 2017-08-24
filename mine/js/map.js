@@ -1,5 +1,6 @@
 var map;
 var markers = [];
+var jSonDataObj;
 
 var locations = [{
     title: 'Park Ave Penthouse',
@@ -119,8 +120,7 @@ function initMap() {
     marker.setMap(map);
 
     marker.addListener('click', function() {
-      console.log(position);
-      populateInfoWindow(this, largeInfowindow, position);
+      populateInfoWindow(this, largeInfowindow);
     });
 
     marker.addListener('mouseover', function() {
@@ -133,6 +133,7 @@ function initMap() {
 
 }
 
+//Helper functions
 var stringStartsWith = function(string, startsWith) {
   string = string || "";
   if (startsWith.length > string.length)
@@ -151,7 +152,7 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
-function populateInfoWindow(marker, infowindow, position) {
+function populateInfoWindow(marker, infowindow) {
   if (infowindow.marker != marker) {
     infowindow.setContent('');
     infowindow.marker = marker;
@@ -160,17 +161,8 @@ function populateInfoWindow(marker, infowindow, position) {
       infowindow.marker = null;
     });
 
-    getData(position);
-
-    //infowindow.setContent('<div>' + marker.title + '</div>');
-    //infowindow.open(map, marker);
-
-
-
-
+    getData(marker, infowindow);
   }
-
-
 }
 
 function showMarkers() {
@@ -183,51 +175,14 @@ function hideMarkers() {
     markers[i].setMap(null);
 }
 
-function getData(position) {
-  //console.log(position.lat);
-  //console.log(position.lng);
+function getData(marker, infowindow) {
   $.ajax({
     type: "GET",
-    url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + position.lat + "," + position.lng + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
+    url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + marker.getPosition().lat() + "," + marker.getPosition().lng() + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
     success: function(data) {
-      var dataobj = data.response.venues[0].location.address;
-      console.log(dataobj);
-
-      /*
-      $("#venues").html("");
-
-      $.each(dataobj, function() {
-        if (this.venue.categories[0]) {
-          str = this.venue.categories[0].icon.prefix;
-          newstr = str.substring(0, str.length - 1);
-          icon = newstr + this.venue.categories[0].icon.suffix;
-        } else {
-          icon = "";
-        }
-
-        if (this.venue.contact.formattedPhone) {
-          phone = "Phone:" + this.venue.contact.formattedPhone;
-        } else {
-          phone = "";
-        }
-
-        if (this.venue.location.address) {
-          address = '<p class="subinfo">' + this.venue.location.address + '<br>';
-        } else {
-          address = "";
-        }
-
-        if (this.venue.rating) {
-          rating = '<span class="rating">' + this.venue.rating + '</span>';
-        }
-
-        appendeddatahtml = '<div class="venue"><h2><span>' + this.venue.name + '<img class="icon" src="' + icon + '"> ' + rating + '</span></h2>' + address + phone + '</p><p><strong>Total Checkins:</strong> ' + this.venue.stats.checkinsCount + '</p></div>';
-        $("#venues").append(appendeddatahtml);
-
-      });
-
-      */
+      jSonDataObj = data.response.venues[0].location.address;
+      infowindow.setContent('<div>' + jSonDataObj + '</div>');
+      infowindow.open(map, marker);
     }  //success
   });  //ajax
-
 }
