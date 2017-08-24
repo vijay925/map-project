@@ -10,12 +10,6 @@ var locations = [
     {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}}
 ];
 
-var stringStartsWith = function (string, startsWith) {
-    string = string || "";
-    if (startsWith.length > string.length)
-        return false;
-    return string.substring(0, startsWith.length) === startsWith;
-};
 
 function AppViewModel() {
   var self = this;
@@ -23,7 +17,7 @@ function AppViewModel() {
   self.searchString = ko.observable('');
   self.locationsVisible = ko.observableArray();
 
-  self.init = function() {
+  self.copyLocations = function() {
     for(var i = 0; i < locations.length; i++) {
       self.locationsVisible.push(locations[i]);
     }
@@ -34,108 +28,32 @@ function AppViewModel() {
 
     if(!lowerCaseSearchString) {
       self.locationsVisible.removeAll();
-      self.init();
-      self.createAndShowMarkers();
+      self.copyLocations();
+      showMarkers();
     }
     else
     {
       self.locationsVisible.removeAll();
-      ko.utils.arrayFilter(locations, function(item) {
-        if(stringStartsWith(item.title.toLowerCase(), lowerCaseSearchString))
+      hideMarkers();
+      ko.utils.arrayFilter(markers, function(item) {
+        var markerTitle = item.title;
+        if(stringStartsWith(markerTitle.toLowerCase(), lowerCaseSearchString)) {
           self.locationsVisible.push(item);
+          item.setMap(map);
+        } //if
       });
-      self.createAndShowMarkers();
     }
   };
 
-  self.createAndShowMarkers = function() {
-    for(var i = 0; i < markers.length; i++) {
-      markers[i].setMap(null);
-    }
-
-    markers = [];
-
-    var defaultIcon = makeMarkerIcon('0091ff');
-    var highlightedIcon = makeMarkerIcon('FFFF24');
-
-    for(var i = 0; i < self.locationsVisible().length; i++) {
-      var position = self.locationsVisible()[i].location;
-      var title = self.locationsVisible()[i].title;
-
-    var marker = new google.maps.Marker({
-      position: position,
-      title: title,
-      animation: google.maps.Animation.DROP,
-      icon: defaultIcon,
-      id: i
-    });
-
-    markers.push(marker);
-    marker.setMap(map);
-
-    marker.addListener('click', function() {
-      populateInfoWindow(this, largeInfowindow);
-    });
-
-    marker.addListener('mouseover', function() {
-      this.setIcon(highlightedIcon);
-    });
-    marker.addListener('mouseout', function() {
-      this.setIcon(defaultIcon);
-    });
-
-  } //for
-  };
-
-}
+}  //AppViewModel
 
 var VM = new AppViewModel();
 ko.applyBindings(VM);
-VM.init();
+VM.copyLocations();
 
 VM.searchString.subscribe(function() {
     VM.filter();
 });
-
-/*
-function createAndShowMarkers() {
-  //console.log("updateMarkers called");
-  markers.length = 0;
-
-  var defaultIcon = makeMarkerIcon('0091ff');
-  var highlightedIcon = makeMarkerIcon('FFFF24');
-
-  for(var i = 0; i < locationsVisible().length; i++) {
-    var position = locationsVisible()[i].location;
-    var title = locationsVisible()[i].title;
-
-    var marker = new google.maps.Marker({
-      position: position,
-      title: title,
-      animation: google.maps.Animation.DROP,
-      icon: defaultIcon,
-      id: i
-    });
-
-    markers.push(marker);
-    marker.setMap(map);
-
-    marker.addListener('click', function() {
-      populateInfoWindow(this, largeInfowindow);
-    });
-
-    marker.addListener('mouseover', function() {
-      this.setIcon(highlightedIcon);
-    });
-    marker.addListener('mouseout', function() {
-      this.setIcon(defaultIcon);
-    });
-  } //for
-
-}
-*/
-
-
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -178,6 +96,13 @@ function initMap() {
 
 }
 
+var stringStartsWith = function (string, startsWith) {
+    string = string || "";
+    if (startsWith.length > string.length)
+        return false;
+    return string.substring(0, startsWith.length) === startsWith;
+};
+
 function makeMarkerIcon(markerColor) {
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
@@ -202,4 +127,14 @@ function populateInfoWindow(marker, infowindow) {
     infowindow.open(map, marker);
   }
 
+}
+
+function showMarkers() {
+  for (var i = 0; i < markers.length; i++)
+    markers[i].setMap(map);
+}
+
+function hideMarkers() {
+  for (var i = 0; i < markers.length; i++)
+    markers[i].setMap(null);
 }
