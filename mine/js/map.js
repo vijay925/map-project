@@ -2,49 +2,14 @@ var map;
 var markers = [];
 var jSonDataObj;
 
-var locations = [{
-    title: 'Park Ave Penthouse',
-    location: {
-      lat: 40.7713024,
-      lng: -73.9632393
-    }
-  },
-  {
-    title: 'Chelsea Loft',
-    location: {
-      lat: 40.7444883,
-      lng: -73.9949465
-    }
-  },
-  {
-    title: 'Union Square Open Floor Plan',
-    location: {
-      lat: 40.7347062,
-      lng: -73.9895759
-    }
-  },
-  {
-    title: 'East Village Hip Studio',
-    location: {
-      lat: 40.7281777,
-      lng: -73.984377
-    }
-  },
-  {
-    title: 'TriBeCa Artsy Bachelor Pad',
-    location: {
-      lat: 40.7195264,
-      lng: -74.0089934
-    }
-  },
-  {
-    title: 'Chinatown Homey Space',
-    location: {
-      lat: 40.7180628,
-      lng: -73.9961237
-    }
-  }
-];
+  var locations = [
+    {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
+    {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
+    {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062, lng: -73.9895759}},
+    {title: 'East Village Hip Studio', location: {lat: 40.7281777, lng: -73.984377}},
+    {title: 'TriBeCa Artsy Bachelor Pad', location: {lat: 40.7195264, lng: -74.0089934}},
+    {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}}
+  ];
 
 
 function AppViewModel() {
@@ -130,7 +95,6 @@ function initMap() {
       this.setIcon(defaultIcon);
     });
   } //for
-
 }
 
 //Helper functions
@@ -180,8 +144,8 @@ function getData(marker, infowindow) {
     type: "GET",
     url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + marker.getPosition().lat() + "," + marker.getPosition().lng() + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
     success: function(data) {
-      jSonDataObj = data.response.venues[0].location.address;
-      infowindow.setContent('<div>' + jSonDataObj + '</div>');
+      jSonDataObj = data.response.venues[0].location;
+      infowindow.setContent('<div>' + jSonDataObj.address + '</br>' + jSonDataObj.city + '</br>' + jSonDataObj.country + '</div>');
       infowindow.open(map, marker);
     }  //success
   });  //ajax
