@@ -64,7 +64,7 @@ function initMap() {
     mapTypeControl: false
   });
 
-  var defaultIcon = makeMarkerIcon('0091ff');
+  var defaultIcon = makeMarkerIcon('a120d8');
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
   var largeInfowindow = new google.maps.InfoWindow();
