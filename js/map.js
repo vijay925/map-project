@@ -34,7 +34,7 @@ function AppViewModel() {
       self.copyLocations();
       showMarkers();
     } else {
-      //self.locationsVisible.removeAll();
+      self.locationsVisible.removeAll();
       hideMarkers();
       ko.utils.arrayFilter(markers, function(item) {
         var markerTitle = item.title;
@@ -81,7 +81,7 @@ function initMap() {
   for(var index = 0; index < locations.length; ++index) {
     $.ajax({
       type: "GET",
-      url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[index].location.lat + "," + locations[index].location.lng + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
+      url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[index].location.lat + "," + locations[index].location.lng + "&limit=1&client_id=W2Y5VDE05JUYUKIDVVVF15ATLRTTM40SSOV5Y0HY2W3MVGRL&client_secret=IKGFWYKIOKYJBLAKATJZAI4OXIWZ05P5XDSX3I2RNYFA5XXN",
       success: success,
       error: error
     });  //ajax
