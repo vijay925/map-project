@@ -1,6 +1,7 @@
 var map;
 var markers = [];
 var jSonDataObj = [];
+var largeInfowindow;
 
   var locations = [
     {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
@@ -44,6 +45,21 @@ function AppViewModel() {
     }
   };
 
+  self.itemClicked = function(index) {
+    var marker = markers[index];
+    populateInfoWindow(markers[index], largeInfowindow);
+
+    if (marker.getAnimation() !== null) {
+      marker.setAnimation(null);
+    }
+    else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function () {
+        marker.setAnimation(null);
+      }, 500); // current maps duration of one bounce (v3.13)
+    }
+  }
+
 } //AppViewModel
 
 var VM = new AppViewModel();
@@ -79,7 +95,7 @@ function initMap() {
   var defaultIcon = makeMarkerIcon('a120d8');
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
-  var largeInfowindow = new google.maps.InfoWindow();
+  largeInfowindow = new google.maps.InfoWindow();
 
   var position;
   var title;

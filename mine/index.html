@@ -14,7 +14,9 @@
       <p>Filter: <input data-bind="value: searchString, valueUpdate: 'keyup'" /></p>
       <h2>Places in New York!</h2>
       <ul data-bind="foreach: locationsVisible">
-        <li data-bind="text: title"></li>
+         <li data-bind="click: $parent.itemClicked.bind($data, $index())">
+               <a><p data-bind="text: title"></p></a>
+          </li>
       </ul>
     </div>
 
