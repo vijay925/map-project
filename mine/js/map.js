@@ -1,6 +1,6 @@
 var map;
 var markers = [];
-var jSonDataObj;
+var jSonDataObj = [];
 
   var locations = [
     {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
@@ -54,6 +54,10 @@ VM.searchString.subscribe(function() {
   VM.filter();
 });
 
+var success = function(data) {
+    jSonDataObj.push(data.response.venues[0].location);
+}
+
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {
@@ -64,14 +68,24 @@ function initMap() {
     mapTypeControl: false
   });
 
+  for(var i = 0; i < locations.length; ++i) {
+    $.ajax({
+      type: "GET",
+      url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[i].location.lat + "," + locations[i].location.lng + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
+      success: success
+    });  //ajax
+  } //for
+
   var defaultIcon = makeMarkerIcon('a120d8');
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
   var largeInfowindow = new google.maps.InfoWindow();
 
+  var position;
+  var title;
   for (var i = 0; i < locations.length; ++i) {
-    var position = locations[i].location;
-    var title = locations[i].title;
+    position = locations[i].location;
+    title = locations[i].title;
 
     var marker = new google.maps.Marker({
       position: position,
@@ -125,7 +139,8 @@ function populateInfoWindow(marker, infowindow) {
       infowindow.marker = null;
     });
 
-    getData(marker, infowindow);
+    infowindow.setContent('<div class="info-window-text">' + jSonDataObj[marker.id].address + '</br>' + jSonDataObj[marker.id].city + '</br>' + jSonDataObj[marker.id].country + '</div>');
+    infowindow.open(map, marker);
   }
 }
 
@@ -137,16 +152,4 @@ function showMarkers() {
 function hideMarkers() {
   for (var i = 0; i < markers.length; i++)
     markers[i].setMap(null);
-}
-
-function getData(marker, infowindow) {
-  $.ajax({
-    type: "GET",
-    url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + marker.getPosition().lat() + "," + marker.getPosition().lng() + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
-    success: function(data) {
-      jSonDataObj = data.response.venues[0].location;
-      infowindow.setContent('<div>' + jSonDataObj.address + '</br>' + jSonDataObj.city + '</br>' + jSonDataObj.country + '</div>');
-      infowindow.open(map, marker);
-    }  //success
-  });  //ajax
 }
