@@ -2,8 +2,9 @@ var map;
 var markers = [];
 var jSonDataObj = [];
 var largeInfowindow;
+var fourSquareAlertFlag = true;
 
-  var locations = [
+var locations = [
     {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
     {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
     {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062, lng: -73.9895759}},
@@ -33,11 +34,12 @@ function AppViewModel() {
       self.copyLocations();
       showMarkers();
     } else {
-      self.locationsVisible.removeAll();
+      //self.locationsVisible.removeAll();
       hideMarkers();
       ko.utils.arrayFilter(markers, function(item) {
         var markerTitle = item.title;
         if (stringStartsWith(markerTitle.toLowerCase(), lowerCaseSearchString)) {
+          self.locationsVisible.removeAll();
           self.locationsVisible.push(item);
           item.setMap(map);
         } //if
@@ -46,18 +48,10 @@ function AppViewModel() {
   };
 
   self.itemClicked = function(index) {
+    console.log(index);
     var marker = markers[index];
     populateInfoWindow(marker, largeInfowindow);
-
-    if (marker.getAnimation() !== null) {
-      marker.setAnimation(null);
-    }
-    else {
-      marker.setAnimation(google.maps.Animation.BOUNCE);
-      setTimeout(function () {
-        marker.setAnimation(null);
-      }, 500);
-    }
+    animateMarker(marker);
   };
 
 } //AppViewModel
@@ -70,9 +64,9 @@ VM.searchString.subscribe(function() {
   VM.filter();
 });
 
-var success = function(data) {
-    jSonDataObj.push(data.response.venues[0].location);
-};
+function googleApiError() {
+  alert("Google maps Api failed to load");
+}
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -88,7 +82,8 @@ function initMap() {
     $.ajax({
       type: "GET",
       url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[index].location.lat + "," + locations[index].location.lng + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
-      success: success
+      success: success,
+      error: error
     });  //ajax
   } //for
 
@@ -130,6 +125,22 @@ function initMap() {
 }
 
 //Helper functions
+var success = function(data) {
+  jSonDataObj.push(data.response.venues[0].location);
+};
+
+var error = function() {
+  if(fourSquareAlertFlag) {
+    alert("Data from Foursquare failed to load.");
+    fourSquareAlertFlag = false;
+  }
+};
+
+var animateMarker = function(marker) {
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+  setTimeout(function () {marker.setAnimation(null);}, 500);
+};
+
 var stringStartsWith = function(string, startsWith) {
   string = string || "";
   if (startsWith.length > string.length)
@@ -149,6 +160,7 @@ function makeMarkerIcon(markerColor) {
 }
 
 function populateInfoWindow(marker, infowindow) {
+  animateMarker(marker);
   if (infowindow.marker != marker) {
     infowindow.setContent('');
     infowindow.marker = marker;
