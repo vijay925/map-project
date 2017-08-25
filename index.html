@@ -5,12 +5,14 @@
     <title>Neighborhood Map</title>
     <link rel="stylesheet" type="text/css" href="css/map.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ADDING BOOTSTRAP -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 
 
 <body>
-  <div class="container">
-    <div class="side-bar">
+  <div class="container .row">
+    <div class="side-bar .col-xs-6 .col-md-4">
       <p>Filter: <input data-bind="value: searchString, valueUpdate: 'keyup'" /></p>
       <h2>Places in New York!</h2>
       <ul data-bind="foreach: locationsVisible">
@@ -18,9 +20,10 @@
                <a><p data-bind="text: title"></p></a>
           </li>
       </ul>
+      <div id="map" class=".col-xs-6 .col-md-8"></div>
     </div>
 
-    <div id="map"></div>
+
 
   </div>
 

@@ -7,7 +7,7 @@ var fourSquareAlertFlag = true;
 var locations = [
     {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
     {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
-    {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062, lng: -73.9895759}},
+    {title: 'Union Square', location: {lat: 40.7347062, lng: -73.9895759}},
     {title: 'East Village Hip Studio', location: {lat: 40.7281777, lng: -73.984377}},
     {title: 'TriBeCa Artsy Bachelor Pad', location: {lat: 40.7195264, lng: -74.0089934}},
     {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}}
@@ -80,7 +80,7 @@ function initMap() {
   for(var index = 0; index < locations.length; ++index) {
     $.ajax({
       type: "GET",
-      url: "https://api.foursquar.com/v2/venues/search?v=20161016&ll=" + locations[index].location.lat + "," + locations[index].location.lng + "&limit=1&client_id=W2Y5VDE05JUYUKIDVVVF15ATLRTTM40SSOV5Y0HY2W3MVGRL&client_secret=IKGFWYKIOKYJBLAKATJZAI4OXIWZ05P5XDSX3I2RNYFA5XXN",
+      url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[index].location.lat + "," + locations[index].location.lng + "&limit=1&client_id=W2Y5VDE05JUYUKIDVVVF15ATLRTTM40SSOV5Y0HY2W3MVGRL&client_secret=IKGFWYKIOKYJBLAKATJZAI4OXIWZ05P5XDSX3I2RNYFA5XXN",
       success: success,
       error: error
     });  //ajax

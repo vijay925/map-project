@@ -9,15 +9,15 @@ body {
 .container {
     height: 100%;
     position: relative;
+    display: flex;
 }
 
 #map {
     bottom: 0px;
     height: 100%;
-    left: 362px;
+    left: 262px;
     position: absolute;
-    right: 0px;
-}
+    right: 0px;}
 
 .side-bar {
     background: #fff;
@@ -27,7 +27,7 @@ body {
     line-height: 35px;
     padding: 10px 10px 30px 10px;
     text-align: left;
-    width: 340px;
+    width: 240px;
 }
 
 .info-window-text {
@@ -70,3 +70,43 @@ li a:hover {
     color: white;
     cursor:pointer;
 }
+
+
+@media screen and (max-width: 568px) {
+  li a {
+    padding: 1px 2px;
+  }
+
+  p {
+    font-size: 10px;
+  }
+  #map
+  {
+    width: 70%;
+    position: absolute;
+    left: 95px;
+  }
+
+  .side-bar {
+    height: 100%;
+  }
+  ul {
+    width: 30%;
+  }
+
+  h2 {
+    font-size: 9px;
+  }
+
+  li a {
+    padding: 0;
+    margin-top: 0;
+  }
+
+  input {
+    width: 50px;
+    height: 10px;
+  }
+
+}
+
