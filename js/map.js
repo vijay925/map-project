@@ -47,7 +47,7 @@ function AppViewModel() {
 
   self.itemClicked = function(index) {
     var marker = markers[index];
-    populateInfoWindow(markers[index], largeInfowindow);
+    populateInfoWindow(marker, largeInfowindow);
 
     if (marker.getAnimation() !== null) {
       marker.setAnimation(null);
@@ -56,7 +56,7 @@ function AppViewModel() {
       marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function () {
         marker.setAnimation(null);
-      }, 500); // current maps duration of one bounce (v3.13)
+      }, 500);
     }
   };
 
