@@ -99,9 +99,10 @@ function initMap() {
 
   var position;
   var title;
-  for (var i = 0; i < locations.length; ++i) {
-    position = locations[i].location;
-    title = locations[i].title;
+
+  locations.forEach(function(location, i) {
+    position = location.location;
+    title = location.title;
 
     var marker = new google.maps.Marker({
       position: position,
@@ -124,7 +125,8 @@ function initMap() {
     marker.addListener('mouseout', function() {
       this.setIcon(defaultIcon);
     });
-  } //for
+    } //callback forEach
+  );
 }
 
 //Helper functions
