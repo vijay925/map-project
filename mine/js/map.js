@@ -23,7 +23,7 @@ function AppViewModel() {
     for (var i = 0; i < locations.length; i++) {
       self.locationsVisible.push(locations[i]);
     }
-  }
+  };
 
   self.filter = function() {
     var lowerCaseSearchString = self.searchString().toLowerCase();
@@ -58,7 +58,7 @@ function AppViewModel() {
         marker.setAnimation(null);
       }, 500); // current maps duration of one bounce (v3.13)
     }
-  }
+  };
 
 } //AppViewModel
 
@@ -72,7 +72,7 @@ VM.searchString.subscribe(function() {
 
 var success = function(data) {
     jSonDataObj.push(data.response.venues[0].location);
-}
+};
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -84,10 +84,10 @@ function initMap() {
     mapTypeControl: false
   });
 
-  for(var i = 0; i < locations.length; ++i) {
+  for(var index = 0; index < locations.length; ++index) {
     $.ajax({
       type: "GET",
-      url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[i].location.lat + "," + locations[i].location.lng + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
+      url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[index].location.lat + "," + locations[index].location.lng + "&limit=1&client_id=HM5U0BYQVXKL41312BNBHD5SCAMD321J2NPQDIO1W1TXUEUR&client_secret=RPHJUZVQPQIZOLQOYPT00ZEOZAW334NTHFMIFPGQX0MCXKZB",
       success: success
     });  //ajax
   } //for
