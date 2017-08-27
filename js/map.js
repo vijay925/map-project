@@ -47,7 +47,6 @@ function AppViewModel() {
   };
 
   self.itemClicked = function(index) {
-    console.log(index);
     var marker = markers[index];
     populateInfoWindow(marker, largeInfowindow);
     animateMarker(marker);
