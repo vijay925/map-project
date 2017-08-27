@@ -126,7 +126,7 @@ function initMap() {
 var success = function(data) {
   var locationData = data.response.venues[0].location;
 
-  if(locationData != null)
+  if(locationData !== null)
     jSonDataObj.push(data.response.venues[0].location);
 };
 
