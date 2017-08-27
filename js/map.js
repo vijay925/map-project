@@ -124,7 +124,10 @@ function initMap() {
 
 //Helper functions
 var success = function(data) {
-  jSonDataObj.push(data.response.venues[0].location);
+  var locationData = data.response.venues[0].location;
+
+  if(locationData != null)
+    jSonDataObj.push(data.response.venues[0].location);
 };
 
 var error = function() {
