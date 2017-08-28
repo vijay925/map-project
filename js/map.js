@@ -46,10 +46,16 @@ function AppViewModel() {
     }
   };
 
-  self.itemClicked = function(index) {
-    var marker = markers[index];
-    populateInfoWindow(marker, largeInfowindow);
-    animateMarker(marker);
+  self.itemClicked = function(data) {
+    var itemClickedTitle = data.title;
+    var marker;
+    for(var i = 0 ; i < markers.length; i++) {
+      if(itemClickedTitle == markers[i].title) {
+        marker = markers[i];
+        populateInfoWindow(marker, largeInfowindow);
+        animateMarker(marker);
+      } //if
+    } //for
   };
 
 } //AppViewModel
