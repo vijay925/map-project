@@ -5,12 +5,12 @@ var largeInfowindow;
 var fourSquareAlertFlag = true;
 
 var locations = [
-    {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
-    {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
-    {title: 'Union Square', location: {lat: 40.7347062, lng: -73.9895759}},
-    {title: 'East Village Hip Studio', location: {lat: 40.7281777, lng: -73.984377}},
-    {title: 'TriBeCa Artsy Bachelor Pad', location: {lat: 40.7195264, lng: -74.0089934}},
-    {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}}
+    {title: 'Hunter College', location: {lat: 40.7685406, lng: -73.9668138}, id: '49ef4d51f964a52094681fe3'},
+    {title: 'Barcade', location: {lat: 40.7443363, lng: -73.9966751}, id: '518a71ab498e430858000827'},
+    {title: 'SideBAR', location: {lat: 40.734929, lng: -73.9906367}, id: '49c65e83f964a5203b571fe3'},
+    {title: 'Please Dont Tell', location: {lat: 40.7270921, lng: -73.9859516}, id: '4656e1ebf964a52007471fe3'},
+    {title: 'Tribeca Grill', location: {lat: 40.7195638, lng: -74.0122452}, id: '3fd66200f964a52091e61ee3'},
+    {title: 'Shanghai Cafe Deluxe', location: {lat: 40.717267, lng: -73.9994227}, id: '46936ee3f964a520d0481fe3'}
   ];
 
 
@@ -85,7 +85,7 @@ function initMap() {
   for(var index = 0; index < locations.length; ++index) {
     $.ajax({
       type: "GET",
-      url: "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + locations[index].location.lat + "," + locations[index].location.lng + "&limit=1&client_id=W2Y5VDE05JUYUKIDVVVF15ATLRTTM40SSOV5Y0HY2W3MVGRL&client_secret=IKGFWYKIOKYJBLAKATJZAI4OXIWZ05P5XDSX3I2RNYFA5XXN",
+      url: "https://api.foursquare.com/v2/venues/" + locations[index].id + "?" + "v=20170828&limit=1&client_id=W2Y5VDE05JUYUKIDVVVF15ATLRTTM40SSOV5Y0HY2W3MVGRL&client_secret=IKGFWYKIOKYJBLAKATJZAI4OXIWZ05P5XDSX3I2RNYFA5XXN",
       success: success,
       error: error
     });  //ajax
@@ -130,10 +130,10 @@ function initMap() {
 
 //Helper functions
 var success = function(data) {
-  var locationData = data.response.venues[0].location;
+  var locationData = data.response.venue;
 
   if(locationData !== null)
-    jSonDataObj.push(data.response.venues[0].location);
+    jSonDataObj.push(locationData);
 };
 
 var error = function() {
@@ -176,7 +176,16 @@ function populateInfoWindow(marker, infowindow) {
       infowindow.marker = null;
     });
 
-    infowindow.setContent('<div class="info-window-text">' + jSonDataObj[marker.id].address + '</br>' + jSonDataObj[marker.id].city + '</br>' + jSonDataObj[marker.id].country + '</div>');
+    var currentMarkerFourSquareID = (locations[marker.id]).id;
+    var addressIndex;
+
+    for(var i = 0; i < jSonDataObj.length; i++) {
+      if(jSonDataObj[i].id == currentMarkerFourSquareID) {
+        addressIndex = i;
+      }
+    }
+
+    infowindow.setContent('<div class="info-window-text">' + jSonDataObj[addressIndex].location.address + '</br>' + jSonDataObj[addressIndex].location.city + '</br>' + jSonDataObj[addressIndex].location.country + '</div>');
     infowindow.open(map, marker);
   }
 }
